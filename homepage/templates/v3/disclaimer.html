@@ -1,0 +1,9 @@
+{% extends 'v3/_base.html' %}
+{% load markdownify %}
+
+{% block content %}
+    <div class="content__container">
+        <h1>Disclaimer</h1>
+        {{ content|linebreaks }}
+    </div>
+{% endblock %}

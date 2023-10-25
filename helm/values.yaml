@@ -1,0 +1,112 @@
+tags:
+  postgresql: true
+
+replicaCount: 1
+
+image:
+  repository: registry.gitlab.com/purmerend/atlas
+  tag: latest
+  pullPolicy: IfNotPresent
+
+podAnnotations: {}
+
+debug: false
+secretKey: something-secret
+allowedHosts: atlas.example.com
+
+internalIps: ""
+adminIps: ""
+
+dbHost: atlas-postgresql
+dbUser: atlas
+dbPassword: change-to-something-secret
+dbName: atlas
+
+loadDemoData: false
+
+existingSecret: null # Refer to existing secret to avoid managing secrets through Helm
+
+smartstreetUser: ""
+smartstreetPassword: ""
+smartstreetApiKey: ""
+
+googleMapsApiKey: ""
+
+sentryDsn: ""
+
+matomoUrl: ""
+matomoSiteId: ""
+
+authenticationEnableCredentials: true
+authenticationEnableOidc: false
+
+oidcClientId: atlas
+oidcClientSecret: somethingsecret
+oidcSignAlgo: RS256
+oidcScopes: openid email profile
+oidcAuthorizationEndpoint: http://localhost:6556/auth
+oidcTokenEndpoint: http://localhost:6556/token
+oidcUserEndpoint: http://localhost:6556/userinfo
+oidcJwksEndpoint: http://localhost:6556/keys
+oidcUsernameClaim: sub
+oidcActivateOnCreate: true
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podSecurityContext:
+  fsGroup: 33
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  annotations: {}
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: atlas.example.com
+      paths:
+        - path: /atlas
+          pathType: ImplementationSpecific
+  tls: []
+  #   - secretName: atlas-tls
+  #     hosts:
+  #       - atlas.example.com
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+persistence:
+  media:
+    enabled: true
+    size: 1Gi
+    existingClaim: null
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: ""
+
+#########################
+## PostgreSQL subchart ##
+#########################
+postgresql:
+  persistence:
+    size: 1Gi
+
+  resources:
+    requests:
+      cpu: "1m"
+      memory: "1Mi"
+
+  postgresqlDatabase: atlas
+  postgresqlUsername: atlas
+  postgresqlPassword: change-to-something-secret

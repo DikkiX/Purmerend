@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+  atlas:
+    build:
+      context: .
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=changemetosomethingsecret
+      - ALLOWED_HOSTS=*
+      - ADMIN_IPS=
+      - INTERNAL_IPS=127.0.0.1
+      - DB_HOST=postgres
+      - DB_USER=atlas
+      - DB_PASSWORD=atlas
+      - DB_NAME=atlas
+      - SMARTSTREET_USER=
+      - SMARTSTREET_PASSWORD=
+      - SMARTSTREET_API_KEY=
+      - GOOGLE_MAPS_API_KEY=
+    ports:
+      - 8000:8000
+  postgres:
+    image: postgres:15.3
+    environment:
+      - POSTGRES_USER=atlas
+      - POSTGRES_PASSWORD=atlas
+      - POSTGRES_DB=atlas
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  dex:
+    image: quay.io/dexidp/dex:v2.28.1
+    command: dex serve /config.yaml
+    volumes:
+      - ./dex.dev.yml:/config.yaml
+    ports:
+      - 6556:6556
+
+volumes:
+  postgres-data:
